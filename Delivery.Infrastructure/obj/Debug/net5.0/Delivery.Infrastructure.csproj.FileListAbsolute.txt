@@ -1,0 +1,15 @@
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\bin\Debug\net5.0\Delivery.Core.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.AssemblyInfoInputs.cache
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.AssemblyInfo.cs
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.csproj.AssemblyReference.cache
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\bin\Debug\net5.0\Delivery.Infrastructure.deps.json
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\bin\Debug\net5.0\Delivery.Infrastructure.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\bin\Debug\net5.0\ref\Delivery.Infrastructure.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\bin\Debug\net5.0\Delivery.Infrastructure.pdb
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\bin\Debug\net5.0\Delivery.Core.pdb
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.csproj.CopyComplete
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\ref\Delivery.Infrastructure.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Infrastructure\obj\Debug\net5.0\Delivery.Infrastructure.pdb

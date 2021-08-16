@@ -1,0 +1,15 @@
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\bin\Debug\net5.0\Delivery.Core.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.AssemblyInfoInputs.cache
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.AssemblyInfo.cs
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.csproj.AssemblyReference.cache
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.csproj.CoreCompileInputs.cache
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\bin\Debug\net5.0\Delivery.Application.deps.json
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\bin\Debug\net5.0\Delivery.Application.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\bin\Debug\net5.0\ref\Delivery.Application.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\bin\Debug\net5.0\Delivery.Application.pdb
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\bin\Debug\net5.0\Delivery.Core.pdb
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.csproj.CopyComplete
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\ref\Delivery.Application.dll
+C:\Users\Pavel\source\repos\Delivery\Delivery.Application\obj\Debug\net5.0\Delivery.Application.pdb

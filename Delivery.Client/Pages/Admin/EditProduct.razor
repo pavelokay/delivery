@@ -1,0 +1,55 @@
+﻿@page "/admin/editProduct/{product.Name}"
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize(Roles = "Admin")]
+
+@inject IProductDataProvider _productDataProvider
+@inject ICategoryDataProvider _categoryDataProvider
+@inject IManufacturerDataProvider _manufacturerDataProvider
+
+
+<h3>Редактировать товар</h3>
+
+<EditForm Model="@Product" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText id="name" @bind-Value="Product.Name" />
+    <InputText id="slug" @bind-Value="Product.Slug" />
+    <InputSelect id="category" @bind-Value="Product.CategoryId">
+        @foreach (var category in _categories)
+        {
+            <option value="@category.Id">@category.Name</option>
+        }
+    </InputSelect>
+    <InputSelect id="manufacturer" @bind-Value="Product.Manufacturer">
+        @foreach (var manufacturer in _manufacturers)
+        {
+            <option value="@manufacturer.Id">@manufacturer.Name</option>
+        }
+    </InputSelect>
+    <InputTextArea id="description" @bind-Value="Product.Description" />
+    <InputFile @bind-Value="@Product.ProductImages">Добавить изображение</InputFile>
+    <button type="submit">Редактировать</button>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public ProductModel Product { get; set; }
+
+    private IEnumerable<CategoryModel> _categories;
+    private IEnumerable<ManufacturerModel> _manufacturers;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        _categories = await _categoryDataProvider.GetCategories();
+        _manufacturers = await _manufacturerDataProvider.GetManufacturers();
+    }
+
+    private void HandleValidSubmit()
+    {
+        _productDataProvider.UpdateProduct(Product);
+    }
+}

@@ -1,0 +1,181 @@
+﻿@typeparam TItem
+
+<table class="table">
+    <thead>
+        <tr>@TableHeader</tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in _paginatedItems)
+        {
+            <tr>@RowTemplate(item)</tr>
+        } 
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public RenderFragment TableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> RowTemplate { get; set; }
+
+    [Parameter]
+    public ICollection<TItem> Items { get; set; }
+
+    [Parameter]
+    public int PageSize { get; set; } = 15;
+
+    [Parameter]
+    public string Sort { get; set; }
+
+    [Parameter]
+    public bool IsSortedAscending { get; set; }
+
+    [Parameter]
+    public int? CategoryId { get; set; }
+
+    private ICollection<TItem> _paginatedItems = new List<TItem>();
+
+    private int _currentPageNumber = 1;
+    public int _totalPageCount;
+    private int _startPageIndex = 0;
+    private int _endPageIndex = 0;
+    private string _currentSort;
+    private bool _isSortedAscending;
+
+    public string Filter { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _currentSort = Sort;
+        _isSortedAscending = IsSortedAscending;
+        ApplySort(_currentSort);
+    }
+
+    private void ApplySort(string sortColumn)
+    {
+        if (sortColumn != _currentSort)
+        {
+            Items = Items.OrderBy(x => GetPropValue(x, sortColumn)).ToList();
+            _isSortedAscending = true;
+            _currentSort = sortColumn;
+        }
+        else
+        {
+            if (_isSortedAscending)
+            {
+                Items = Items.OrderByDescending(x => GetPropValue(x, sortColumn)).ToList();
+            }
+            _isSortedAscending = !_isSortedAscending;
+        }
+        HandleChangePage(_currentPageNumber);
+    }
+
+    private bool IsVisible<T>(T item, string propName, string filter)
+    {
+        if (string.IsNullOrEmpty(filter))
+        {
+            return true;
+        }
+        if (item.GetType().GetProperty(propName).GetValue(item, null).ToString().Contains(filter, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void HandleChangePage(int page)
+    {
+        _currentPageNumber = page;
+
+        if (!string.IsNullOrEmpty(Filter) || CategoryId != null)
+        {
+            IEnumerable<TItem> filteredItems;
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                filteredItems = Items.Where(t => IsVisible(t, "Name", Filter));
+                if (CategoryId != null)
+                {
+                    filteredItems = filteredItems.Where(i => IsVisible(i, "CategoryId", CategoryId.ToString()));
+                }
+            }
+            else
+            {
+                filteredItems = Items.Where(i => IsVisible(i, "CategoryId", CategoryId.ToString()));
+            }
+
+            _paginatedItems = filteredItems.Skip(PageSize * (_currentPageNumber - 1)).Take(PageSize).ToList();
+            _totalPageCount = (int)(Math.Ceiling((double)filteredItems.Count() / PageSize));
+        }
+        else
+        {
+            _paginatedItems = Items.Skip(PageSize * (_currentPageNumber - 1)).Take(PageSize).ToList();
+            _totalPageCount = (int)(Math.Ceiling((double)Items.Count() / PageSize));
+        }
+
+
+        _startPageIndex = _currentPageNumber - 3;
+        _endPageIndex = _currentPageNumber + 2;
+
+        if (_startPageIndex <= 0)
+        {
+            _endPageIndex -= (_startPageIndex - 1);
+            _startPageIndex = 1;
+        }
+        if (_endPageIndex > _totalPageCount)
+        {
+            _endPageIndex = _totalPageCount;
+            if (_endPageIndex > 6)
+            {
+                _startPageIndex = _endPageIndex - 5;
+            }
+        }
+    }
+
+    private string SetSortIcon(string sortColumn)
+    {
+        if (_currentSort != sortColumn)
+        {
+            return string.Empty;
+        }
+        if (_isSortedAscending)
+        {
+            return "fa-sort-up";
+        }
+        else
+        {
+            return "fa-sort-down";
+        }
+    }
+
+    //private ICollection<TItem> HandleFilterCategory(ICollection<TItem> items)
+    //{
+    //    return items.Where(i => i.GetType().GetProperty("CategoryId").GetValue(items, null).ToString() == CategoryId.ToString()).ToList();
+    //}
+
+    private void HandleFilterChange(ChangeEventArgs searchedString)
+    {
+        Filter = searchedString.Value.ToString();
+        HandleChangePage(1);
+    }
+
+    private static object GetPropValue(object obj, string propertyName)
+    {
+        foreach(string part in propertyName.Split('.'))
+        {
+            if (obj == null)
+            {
+                return null;
+            }
+            Type type = obj.GetType();
+            var info = type.GetProperty(part);
+            if (info == null)
+            {
+                return null;
+            }
+            obj = info.GetValue(obj, null);
+        }
+        return obj;
+    }
+}

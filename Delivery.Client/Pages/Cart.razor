@@ -1,0 +1,57 @@
+﻿@page "/cart"
+
+@inject ICartDataProvider _cartDataProvider
+
+<h3>Cart</h3>
+
+<TableTemplate Items="_cart.Items" Context="product" PageSize="15">
+    <TableHeader>
+        <th>ID</th>
+        <th>Наименование</th>
+        <th>Вид товара</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th>Сумма</th>
+        <th>Действие</th>
+    </TableHeader>
+    <RowTemplate>
+        <td>@product.Id</td>
+        <td>@product.Product.Name</td>
+        @if (product is CartUnitItemModel)
+        {
+            var unitProduct = (CartUnitItemModel)product;
+            <td>единица</td>
+            <td>@unitProduct.UnitPrice р./шт.</td>
+            <td>@unitProduct.Quantity</td>
+        }
+        else
+        {
+            var weightProduct = (CartWeightItemModel)product;
+            <td>весовой</td>
+            <td>@weightProduct.PricePerKilo р./кг.</td>
+            <td>@weightProduct.WeightInKilo</td>
+        }
+        <td>@product.TotalPrice р.</td>
+        <td><button class="btn btn-link" @onclick="@(e => DeleteItemFromCart(product))">Удалить из корзины</button></td>
+    </RowTemplate>
+</TableTemplate>
+
+<p>Общая стоимость товаров в корзине: @_cart.Items.Sum(x => x.TotalPrice) р.</p>
+
+<NavLink class="nav-link" href="Order">
+    <span class="oi oi-plus" aria-hidden="true"></span>Сделать заказ
+</NavLink>
+
+@code {
+    private CartModel _cart;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cart = await _cartDataProvider.GetCart();
+    }
+
+    private async Task DeleteItemFromCart(CartItemModel cartItem)
+    {
+        await _cartDataProvider.RemoveItem(_cart.Id, cartItem.Id);
+    }
+}
