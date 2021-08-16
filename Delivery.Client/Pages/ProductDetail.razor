@@ -1,0 +1,91 @@
+﻿@page "/productDetail/{Product.Name}"
+
+@inject ICartDataProvider _cartDataProvider
+
+<h3>@Product.Name</h3>
+
+<div class="card">
+    <div class="container-fluid">
+        <div class="wrapper row">
+            <div class="preview col-md-6">
+
+                <div class="preview-pic tab-content">
+                    @foreach (var image in Product.ProductImages)
+                    {
+                        <div class="tab-pane"><img src="@image.ImageFile" alt="@image.AltName" /></div>
+                    }
+                </div>
+            </div>
+            <div class="details col-md-6">
+                <div class="rating">
+                    <div class="stars">
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            if (Product.Rating > i)
+                            {
+                                <span class="fa fa-star checked"></span>
+
+                            }
+                            else
+                            {
+                                <span class="fa fa-star"></span>
+                            }
+                        }
+                    </div>
+                </div>
+                <p class="product-details-desctiption">
+                    @Product.Description
+                </p>
+                @if (Product is UnitProductModel)
+                {
+                    var unitProduct = (UnitProductModel)Product;
+                    <h5 class="product-details-price">Цена: <span>@unitProduct.UnitPrice р.</span></h5>
+                }
+                else
+                {
+                    var weightProduct = (WeightProductModel)Product;
+                    <h5 class="product-details-price">Цена: <span>@weightProduct.PricePerKilo р./кг.</span></h5>
+                }
+            <div class="product-details-actions">
+                @if (_cart.Items.FirstOrDefault(i => i.ProductId == Product.Id) != null)
+                {
+                    <button class="btn btn-outline-dark" @onclick="@(e => AddProductToCart(Product))">Добавить</button>
+                    <button class="btn btn-outline-secondary" @onclick="@(e => RemoveProductFromCart(_cart.Items.FirstOrDefault(i => i.ProductId == Product.Id)))">Удалить</button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-dark" @onclick="@(e => AddProductToCart(Product))">Добавить</button>
+                }
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public ProductModel Product { get; set; }
+
+    private CartModel _cart;
+
+    protected async override Task OnInitializedAsync()
+    {
+        _cart = await _cartDataProvider.GetCart();
+    }
+
+    private async Task AddProductToCart(ProductModel product)
+    {
+        if (product != null)
+        {
+            await _cartDataProvider.AddItem("", product.Id);
+        }
+    }
+
+    private async Task RemoveProductFromCart(CartItemModel cartItem)
+    {
+        if (cartItem != null)
+        {
+            await _cartDataProvider.RemoveItem(_cart.Id, cartItem.Id);
+        }
+    }
+}

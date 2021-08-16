@@ -1,0 +1,93 @@
+﻿@page "/catalog"
+
+@inject IProductDataProvider _productDataProvider
+@inject ICartDataProvider _cartDataProvider
+@inject ICategoryDataProvider _categoryDataProvider
+
+<h3>Каталог товаров</h3>
+<select class="form-select" @bind="_selectedCategoryId">
+    <option selected value="null">Все товары</option>
+    @foreach (var category in _categories)
+    {
+        <option value="@category.Id">@category.Name</option>
+    }
+</select>
+
+<TableTemplate Items="_products.ToList()" Context="product" PageSize="15" CategoryId="_selectedCategoryId">
+    <TableHeader>
+        <th>Изображение</th>
+        <th>Наименование</th>
+        <th>Вид товара</th>
+        <th>Стоимость</th>
+        <th>Добавить в корзину</th>
+        <th>Детали</th>
+    </TableHeader>
+    <RowTemplate>
+        <td><img src="@product.ProductImages.FirstOrDefault().ImageFile" alt="@product.ProductImages.FirstOrDefault().AltName" /></td>
+        <td>@product.Name</td>
+        @if (product is UnitProductModel)
+        {
+            var unitProduct = (UnitProductModel)product;
+            <td>единица</td>
+            <td>@unitProduct.UnitPrice р./шт.</td>
+        }
+        else
+        {
+            var weightProduct = (WeightProductModel)product;
+            <td>весовой</td>
+            <td>@weightProduct.PricePerKilo р./кг.</td>
+        }
+
+        @if (_cart.Items.FirstOrDefault(i => i.ProductId == product.Id) != null)
+        {
+            <td>В корзине: @_cart.Items.Count(i => i.ProductId == product.Id)</td>
+            <td><button class="btn btn-outline-dark" @onclick="@(e => AddProductToCart(product))">Добавить</button></td>
+            <td><button class="btn btn-outline-secondary" @onclick="@(e => RemoveProductFromCart(_cart.Items.FirstOrDefault(i => i.ProductId == product.Id)))">Удалить</button></td>
+        }
+        else
+        {
+            <td><button class="btn btn-outline-dark" @onclick="@(e => AddProductToCart(product))">Добавить</button></td>
+        }
+        <td>
+            <NavLink class="nav-link" href="@GetProductLink(product)">
+                <span class="oi oi-plus" aria-hidden="true"></span>Детали
+            </NavLink> 
+        </td>
+    </RowTemplate>
+</TableTemplate>
+
+@code {
+    private IEnumerable<ProductModel> _products;
+    private CartModel _cart;
+    private IEnumerable<CategoryModel> _categories;
+
+    private int? _selectedCategoryId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _products = await _productDataProvider.GetProducts();
+        _cart = await _cartDataProvider.GetCart();
+        _categories = await _categoryDataProvider.GetCategories();
+    }
+
+    private async Task AddProductToCart(ProductModel product)
+    {
+        if (product != null)
+        {
+            await _cartDataProvider.AddItem("", product.Id);
+        }
+    }
+
+    private async Task RemoveProductFromCart(CartItemModel cartItem)
+    {
+        if (cartItem != null)
+        {
+            await _cartDataProvider.RemoveItem(_cart.Id, cartItem.Id);
+        }
+    }
+
+    private string GetProductLink(ProductModel product)
+    {
+        return "ProductDetail/" + product.Name;
+    }
+}
